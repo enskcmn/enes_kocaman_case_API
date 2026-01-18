@@ -54,4 +54,14 @@ public class PetClient {
                 .when()
                 .post(Routes.PET_BY_ID);
     }
+    public static Response updatePetWithWrongContentType(int id, String name, String status){
+        return given()
+                .log().uri()
+                .contentType(ContentType.JSON)
+                .pathParam("id",id)
+                .formParam("name",name)
+                .formParam("status",status)
+                .when()
+                .post(Routes.PET_BY_ID);
+    }
 }
