@@ -46,4 +46,46 @@ public class PetPositiveTests extends BaseTest{
         Assert.assertEquals(response.statusCode(),200);
         Assert.assertEquals(response.jsonPath().getString("name"), petClient.getName());
     }
+    @Test(priority = 2)
+    public void testGetPet(){
+        Response response = PetClient.getPet(petClient.getId());
+        response.prettyPrint();
+
+        Assert.assertEquals(response.statusCode(),200);
+    }
+    @Test(priority = 3)
+    public void testUpdatePet(){
+        petClient.setId(5755);
+        petClient.setName("barty");
+        petClient.setStatus(Status.sold);
+        Response response = PetClient.updatePet(petClient);
+        response.then().log().body();
+
+        Assert.assertEquals(response.statusCode(),200);
+        //Checking data after update
+        Response responseAfterUpdate = PetClient.getPet(this.petClient.getId());
+        Assert.assertEquals(responseAfterUpdate.statusCode(),200);
+    }
+    @Test(priority = 4)
+    public void testGetPetByStatus(){
+        Response response = PetClient.findPetByStatus(Status.pending);
+
+        Assert.assertTrue(response.jsonPath().getList("$").size() > 0);
+        Assert.assertEquals(response.statusCode(),200);
+    }
+    @Test
+    public void testUpdatePetById(){
+        Response response = PetClient.updatePetById(12,"updated","sold");
+        response.prettyPrint();
+
+        Assert.assertEquals(response.statusCode(),200);
+        Assert.assertEquals(response.jsonPath().getString("message"),"12");
+    }
+    @Test(priority = 5)
+    public void testDeletePet(){
+        Response response = PetClient.deletePet(this.petClient.getId());
+        response.then().log().all();
+
+        Assert.assertEquals(response.statusCode(),200);
+    }
 }
